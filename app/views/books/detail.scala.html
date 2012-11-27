@@ -1,0 +1,101 @@
+@(book: Book)(implicit session: Session, flash: Flash, request: Request[_])
+@layout.main(book.title)() {
+
+<div class="book-detail row-fluid">
+    <div class="span2">
+        <img src="@book.coverPictureUrl.getOrElse("")" class="cover-picture">
+
+
+        @book.language.map{flag =>
+            <div class="flag">
+                <img src="@routes.FlagController.getFlag(flag)"/>
+            </div>
+        }
+
+
+        <div class="tags">
+            @for(tag <- book.tags) {
+                @tags.tag(tag, true)
+            }
+        </div>
+
+        @session.get("authenticated").map {_ =>
+            <div class="book-menu clearfix">
+                <a href="@routes.BookController.edit(book.id.get)">@Messages("edit")</a>
+                <a class="delete-book" href="#" data-delete-url="@routes.BookController.delete(book.id.get)"
+                        data-redirect-url="@routes.BookController.list()" data-confirmation-message="@Messages("book.confirmation.delete")">@Messages("delete")</a>
+            </div>
+        }
+    </div>
+    <div class="span10">
+
+        <div class="row-fluid">
+            <span class="span1 a-label">@Messages("title")</span>
+            <span class="span11"> @book.title </span>
+        </div>
+
+        @book.isbn10.map{isbn10=>
+            <div class="row-fluid">
+                <span class="span1 a-label">@Messages("isbn10")</span>
+                <span class="span11">@isbn10</span>
+            </div>
+        }
+
+        @book.isbn13.map{isbn13=>
+            <div class="row-fluid">
+                <span class="span1 a-label">@Messages("isbn13")</span>
+                <span class="span11">@isbn13</span>
+            </div>
+        }
+
+        <div class="row-fluid">
+            <span class="span1 a-label">@Messages("authors")</span>
+            <span class="span11">
+                @Html(book.authors.map(author => tags.authorPopoverLink(author)).mkString("&nbsp;"))
+            </span>
+        </div>
+
+        @book.publisher.map{publisher=>
+            <div class="row-fluid">
+                <span class="span1 a-label">@Messages("publisher")</span>
+                <span class="span11">@publisher</span>
+            </div>
+        }
+
+        @book.pageCount.map{pages=>
+            <div class="row-fluid">
+                <span class="span1 a-label">@Messages("pageCount")</span>
+                <span class="span11">@pages</span>
+            </div>
+        }
+
+        @book.datePublished.map{date=>
+            <div class="row-fluid">
+                <span class="span1 a-label">@Messages("datePublished")</span>
+                <span class="span11">@date.format("yyyy")</span>
+            </div>
+        }
+
+        @book.description.map{description=>
+            <div class="row-fluid">
+                <span class="span1 a-label">@Messages("description")</span>
+                <span class="span11">@description</span>
+            </div>
+        }
+
+        @book.notes.map{notes=>
+            <div class="row-fluid">
+                <span class="span1 a-label">@Messages("notes")</span>
+                <span class="span11">@notes</span>
+            </div>
+        }
+
+
+    </div>
+
+
+
+
+
+</div>
+}

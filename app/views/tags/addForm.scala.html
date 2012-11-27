@@ -1,0 +1,38 @@
+@(bookForm: Form[Book])(implicit session: Session, flash: Flash)
+
+@import helpers.tb2
+@import helper._
+@implicitField = @{ FieldConstructor(tb2.f) }
+
+<img src="@bookForm.value.map(_.coverPictureUrl).getOrElse("")" class="cover-picture">
+
+@helper.form(action = routes.BookController.save, 'class -> "form-horizontal add-book") {
+    @inputText(bookForm("title"), '_required -> "true")
+    @inputText(bookForm("authors"), '_required -> "true", '_tooltip -> Messages("form.addBook.authors.tooltip"))
+    @inputText(bookForm("isbn10"))
+    @inputText(bookForm("isbn13"))
+    @select(bookForm("language"), options=Seq("" -> "---Language---",
+                                              "cs" -> Messages("lang.cs"),
+                                              "de"-> Messages("lang.de"),
+                                              "dk" -> Messages("lang.dk"),
+                                              "en"-> Messages("lang.en"),
+                                              "fr"-> Messages("lang.fr"),
+                                              "it"-> Messages("lang.it"),
+                                              "no"-> Messages("lang.no"),
+                                              "pl"-> Messages("lang.pl"),
+                                              "se"-> Messages("lang.se")))
+    @inputText(bookForm("publisher"))
+    @inputText(bookForm("pageCount"), 'class -> "input-small")
+    @inputText(bookForm("datePublished"), 'class -> "input-small")
+    @textarea(bookForm("description"))
+    @textarea(bookForm("notes"))
+    @inputText(bookForm("tags"), '_tooltip -> Messages("form.addBook.tags.tooltip"))
+
+
+    <div class="control-group">
+        <div class="controls">
+            <input type="hidden" name="coverPictureUrl" value="@if(bookForm.value.isDefined) { @bookForm.value.get.coverPictureUrl.getOrElse("") }">
+            <button type="submit" class="btn">@Messages("submit")</button>
+        </div>
+    </div>
+}

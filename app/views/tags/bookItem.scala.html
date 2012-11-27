@@ -1,0 +1,26 @@
+@(book: Book)(implicit request: Request[_])
+
+<div class="book-item clearfix">
+    <a href="@routes.BookController.detail(book.id.get)">
+        <img class="cover-picture" src="@book.coverPictureUrl.getOrElse("")">
+    </a>
+    <div>
+        <div class="title">
+            <a href="@routes.BookController.detail(book.id.get)">@book.title</a>
+            <!-- <span class="plain-url">@routes.BookController.detail(book.id.get).absoluteURL()</span> -->
+        </div>
+    </div>
+    <div>
+        <div class="authors">
+            @Html(book.authors.map(author => tags.authorPopoverLink(author)).mkString("&nbsp;"))
+        </div>
+        <div class="description"> <!-- todo show description or not (rename, then) -->
+            <!-- @book.description.getOrElse("") -->
+
+            @for(tag <- book.tags) {
+                @tags.tag(tag, true)
+            }
+        </div>
+    </div>
+
+</div>

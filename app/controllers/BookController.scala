@@ -1,0 +1,126 @@
+package controllers
+
+import play.api.mvc._
+import play.api.libs.ws.WS
+import play.api.libs.json.{JsString, JsArray, Json}
+import models.{Tag, Author, Defaults, Book}
+import play.api.data.Form
+import play.api.data.Forms._
+import anorm.NotAssigned
+
+
+object BookController extends Controller with ControllerSupport{
+
+  val delimiter: String = ","
+
+  def list(query: String) = Action {
+    implicit request =>
+      val books = Book.getBooks().filter(_.title.toLowerCase.contains(query.toLowerCase)).sortWith(_.title < _.title)
+      Ok(views.html.books.list(books, Author.getAll, Tag.getAll))
+  }
+
+  def listFragment(query: String, authorId: Option[Long], tagId: Option[Long]) = Action {
+    implicit request =>
+      val books = Book.getBooks().filter(_.title.toLowerCase.contains(query.toLowerCase)).
+        filter(book => !authorId.isDefined || book.authors.exists(_.id.get == authorId.get)).
+        filter(book => !tagId.isDefined || book.tags.exists(_.id.get == tagId.get)).
+        sortWith(_.title < _.title)
+      Ok(views.html.tags.bookList(books))
+  }
+
+  def detail(identifier: Long) = Action {
+    implicit request =>
+      Book.getBook(identifier).map(b => Ok(views.html.books.detail(b))).getOrElse(NotFound)
+  }
+
+  def addGoogleBooksForm() = AuthAction {
+    implicit request =>
+      Ok(views.html.books.add.googlebooks())
+  }
+
+  def edit(identifier: Long) = AuthAction(_ => NotImplemented)
+
+  def save = AuthAction {
+    implicit request =>
+      addForm.bindFromRequest.fold(
+        form => {
+          play.Logger.info(form.toString())
+          Ok(views.html.books.add.manual(form))
+        },
+        book => {
+
+          val savedBook = Book.save(book)
+          Redirect(routes.BookController.detail(savedBook.id.get))
+        }
+      )
+  }
+
+  def delete(identifier: Long) = AuthAction {
+    implicit request =>
+      val result = Book.deleteBook(identifier)
+
+      if (result == 1)
+        Ok.flashing("level" -> "success", "msg" -> "Book has been successfully deleted")
+      else
+        NotFound
+  }
+
+
+  private val addForm: Form[Book] = Form(mapping(
+    "title" -> nonEmptyText,
+    "authors" -> nonEmptyText,
+    "isbn10" -> optional(text),
+    "isbn13" -> optional(text),
+    "language" -> text,
+    "publisher" -> optional(text),
+    "datePublished" -> optional(date(Defaults.GoogleBooksShortDateFormat).verifying("date.notInRange", date => true)), //todo correct validation
+    "description" -> optional(text),
+    "notes" -> optional(text),
+    "pageCount" -> optional(number(min = 1)),
+    "coverPictureUrl" -> optional(text),
+    "tags" -> optional(text)
+
+  ) {
+    case (title, authors, isbn10, isbn13, language, publisher, datePublished, description, notes, pageCount, coverPictureUrl, tags) =>
+      Book(NotAssigned, isbn10, isbn13, title, authors.split(delimiter).toList.map(_.trim).filter(!_.isEmpty).map(Author(NotAssigned, _)), description, publisher,
+        datePublished, if (language.equals("")) None else Some(language), pageCount, notes, coverPictureUrl, tags.map {
+          _.split(delimiter).toList.map(_.trim).filter(!_.isEmpty).map(Tag(NotAssigned, _))
+        }.getOrElse(Nil))
+  }(book => Some(book.title, book.authors.map(_.name).mkString(delimiter), book.isbn10, book.isbn13, if (book.language.isDefined) book.language.get else "",
+    book.publisher, book.datePublished, book.description, book.notes, book.pageCount, book.coverPictureUrl, book.tags match {
+      case Nil => None
+      case list => Some(list.map(_.name).mkString(delimiter))
+    })))
+
+  def addManualForm() = AuthAction {
+    implicit request =>
+      Ok(views.html.books.add.manual(addForm))
+  }
+
+
+  def fetchFromGoogleBooks(isbn: String) = AuthAction {
+
+    implicit request =>
+      import models.formats.Formats.BookFormat
+      play.Logger.info("Fetch from google books. ISBN: %s" format isbn)
+      Async {
+        val url = "https://www.googleapis.com/books/v1/volumes"
+        val result = WS.url(url).withQueryString(("q", "isbn:%s" format isbn)).get()
+
+        result.map {
+          response =>
+            val jsonResponse = response.json
+            if ((jsonResponse \ "totalItems").as[Int] > 0) {
+              val volumeInfo = jsonResponse.\("items")(0).\("volumeInfo")
+
+              val book = Json.fromJson(volumeInfo)
+              play.Logger.info(book.toString)
+              Ok(views.html.tags.addForm(addForm.fill(book)))
+            } else NotFound
+
+        }
+      }
+
+  }
+
+}
