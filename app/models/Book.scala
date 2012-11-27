@@ -52,13 +52,28 @@ object Book {
   def save(book: Book): Book = {
     DB.withConnection {
       implicit c =>
-        val bookId: Option[Long] = {
-          val sql = """insert into book values (DEFAULT, {isbn10}, {isbn13}, {title}, {description}, {publisher}, {datePublished}, {lang}, {pageCount}, {notes}, {coverPictureUrl})"""
 
-          SQL(sql).on("isbn10" -> book.isbn10, "isbn13" -> book.isbn13, "title" -> book.title,
-            "description" -> book.description, "publisher" -> book.publisher, "datePublished" -> book.datePublished,
-            "lang" -> book.language, "pageCount" -> book.pageCount, "notes" -> book.notes,
-            "coverPictureUrl" -> book.coverPictureUrl).executeInsert()
+        val bookId: Option[Long] = book.id match {
+          case Id(value) =>
+            /* update values */
+            val updateSql = """update book set isbn10={isbn10}, isbn13={isbn13}, title={title}, description={description}, publisher={publisher}, date_published={datePublished}, lang={lang}, page_count = {pageCount}, notes={notes} where book_id = {bookId}"""
+            SQL(updateSql).on("isbn10" -> book.isbn10, "isbn13" -> book.isbn13, "title" -> book.title,
+              "description" -> book.description, "publisher" -> book.publisher, "datePublished" -> book.datePublished,
+              "lang" -> book.language, "pageCount" -> book.pageCount, "notes" -> book.notes, "bookId" -> value).executeUpdate()
+
+            /* delete join tables for the book (new entries will be stored later) */
+            SQL("""delete from book_tag where book_id = {bookId}""").on("bookId" -> value).executeUpdate()
+            SQL("""delete from book_author where book_id = {bookId}""").on("bookId" -> value).executeUpdate()
+
+            Some(value)
+
+          case NotAssigned =>
+            val sql = """insert into book values (DEFAULT, {isbn10}, {isbn13}, {title}, {description}, {publisher}, {datePublished}, {lang}, {pageCount}, {notes}, {coverPictureUrl})"""
+
+            SQL(sql).on("isbn10" -> book.isbn10, "isbn13" -> book.isbn13, "title" -> book.title,
+              "description" -> book.description, "publisher" -> book.publisher, "datePublished" -> book.datePublished,
+              "lang" -> book.language, "pageCount" -> book.pageCount, "notes" -> book.notes,
+              "coverPictureUrl" -> book.coverPictureUrl).executeInsert()
         }
 
         // M:N authors

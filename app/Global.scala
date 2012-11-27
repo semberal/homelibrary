@@ -1,9 +1,7 @@
 import play.api.mvc.RequestHeader
 import play.api.{Application, GlobalSettings}
 
-/**
- *
- */
+
 object Global extends GlobalSettings{
   override def onStart(app: Application) {
     super.onStart(app)
@@ -19,4 +17,6 @@ object Global extends GlobalSettings{
     play.Logger.info("Incoming request: %s" format request)
     super.onRouteRequest(request)
   }
+  
+  
 }
