@@ -1,11 +1,24 @@
 @()(implicit session: Session, flash: Flash, request: Request[_])
 
 @layout.main("Homelibrary main page")(List("dashboard.js")) {
-    <h1>Dashboard</h1>
+	
+	<h3>@Messages("index.header")</h3>
+  
+    <p>@Html(Messages("index.paragraph1"))</p>
+	<p>@Html(Messages("index.paragraph2"))</p>
+  
+  
+	<hr>
 
-  @session.get("authenticated").map {_ =>
-  	<a href="#" class="db-cleanup" data-cleanup-url="@routes.UtilController.cleanup"
-                                   data-cleanup-question="@Messages("cleanup.question")"
-                                   data-cleanup-message="@Messages("cleanup.message")">@Messages("cleanup.title")</a>
-  }
+	
+
+	
+
+	<hr>
+	@session.get("authenticated").map {_ =>
+  		<a href="#" class="db-cleanup" 
+					data-cleanup-url="@routes.UtilController.cleanup"
+					data-cleanup-question="@Messages("index.cleanup.question")"
+                    data-cleanup-message="@Messages("index.cleanup.message")">@Messages("index.cleanup.title")</a>
+	}
 }

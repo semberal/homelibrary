@@ -37,6 +37,15 @@ span.search-highlight {
     color: red;
 }
 
+.code {
+	font-family: monospace;
+	border: gray 1px solid;
+	background-color: #FAF2F5;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	font-size: 9pt;
+}
 
 
 /* Add book form */

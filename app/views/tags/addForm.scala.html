@@ -4,7 +4,7 @@
 @import helper._
 @implicitField = @{ FieldConstructor(tb2.f) }
 
-<img src="@bookForm.value.map(_.coverPictureUrl).getOrElse("")" class="cover-picture">
+<img src="@bookForm("coverPictureUrl").value" class="cover-picture">
 
 @helper.form(action = routes.BookController.save, 'class -> "form-horizontal add-book") {
     @inputText(bookForm("title"), '_required -> "true")
@@ -31,7 +31,8 @@
 
     <div class="control-group">
         <div class="controls">
-            <input type="hidden" name="coverPictureUrl" value="@if(bookForm.value.isDefined) { @bookForm.value.get.coverPictureUrl.getOrElse("") }">
+            <input type="hidden" name="coverPictureUrl" value="@bookForm("coverPictureUrl").value">
+            <input type="hidden" name="id" value="@bookForm("id").value">
             <button type="submit" class="btn">@Messages("submit")</button>
         </div>
     </div>

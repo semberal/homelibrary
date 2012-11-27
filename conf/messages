@@ -9,9 +9,7 @@ password=Password
 required=Required field
 book.confirmation.delete=Are you sure you want to delete this book?
 
-cleanup.title=Perform cleanup of authors and tags
-cleanup.question=When you are adding and deleting books, the database can become polluted with authors and tags which are not used anymore. Do you want to delete these unsused authors and tags?
-cleanup.message={0} object(s) have been deleted
+
 
 gb.loading=Loading...
 gb.loading.notFound=Book not found
@@ -24,6 +22,17 @@ no.books.found=There are no books found
 ## Popovers
 popover.author.text=In your library, there are in total {0} book(s) by this author
 popover.tag.text=In your library, there are in total {0} book(s) with this tag
+
+# Index page
+index.header=Welcome to your Homelibrary!
+index.paragraph1=Homelibrary is a simple web application for management of your personal library. You can add books either by filling its details manually, or simply enter the book''s ISBN number (you can find it usually at the very beginning of the book) and all available information will be filled in automatically (<a href="http://books.google.com/">Google Books</a> is used for this lookup).
+index.paragraph2=In order to add a book, you need to log in. User management in Homelibrary is very simple, there is no username is required, just a password. Unless you have changed the password in <span class="code">conf/db.conf</span>, its value is <span class="code">test</span>. 
+
+ 
+index.cleanup.title=Perform cleanup of authors and tags
+index.cleanup.question=When you are adding and deleting books, the database can become polluted with authors and tags which are not used anymore. Do you want to delete these unused authors and tags?
+index.cleanup.message={0} object(s) have been deleted
+
 
 # Menu
 menu.dashboard=Dashboard

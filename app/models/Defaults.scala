@@ -17,4 +17,9 @@ object Defaults {
     case None => NotAssigned
   }
 
+  implicit def pkToOption[T](pk: Pk[T]): Option[T] = pk match {
+    case Id(value) => Some(value)
+    case NotAssigned => None
+  }
+
 }

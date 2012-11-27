@@ -2,14 +2,15 @@ package controllers
 
 import play.api.mvc._
 import play.api.libs.ws.WS
-import play.api.libs.json.{JsString, JsArray, Json}
-import models.{Tag, Author, Defaults, Book}
+import play.api.libs.json.{ JsString, JsArray, Json }
+import models.{ Tag, Author, Defaults, Book }
 import play.api.data.Form
 import play.api.data.Forms._
 import anorm.NotAssigned
+import Defaults.optionToPk
+import Defaults.pkToOption
 
-
-object BookController extends Controller with ControllerSupport{
+object BookController extends Controller with ControllerSupport {
 
   val delimiter: String = ","
 
@@ -38,25 +39,30 @@ object BookController extends Controller with ControllerSupport{
       Ok(views.html.books.add.googlebooks())
   }
 
-  def edit(identifier: Long) = AuthAction(_ => NotImplemented)
+  def edit(identifier: Long) = AuthAction { implicit request =>
+    val book = Book.getBook(identifier)
+    book match {
+      case Some(book0) => Ok(views.html.books.add.manual(addForm.fill(book0)))
+      case None => NotFound
+    }
+    
+    
 
-  def save = AuthAction {
-    implicit request =>
-      addForm.bindFromRequest.fold(
-        form => {
-          play.Logger.info(form.toString())
-          Ok(views.html.books.add.manual(form))
-        },
-        book => {
-
-          val savedBook = Book.save(book)
-          Redirect(routes.BookController.detail(savedBook.id.get))
-        }
-      )
   }
 
-  def delete(identifier: Long) = AuthAction {
-    implicit request =>
+  def save = AuthAction { implicit request =>
+    addForm.bindFromRequest.fold(
+      form => {
+        play.Logger.info(form("coverPictureUrl").toString())
+        Ok(views.html.books.add.manual(form))
+      },
+      book => {
+        val savedBook = Book.save(book)
+        Redirect(routes.BookController.detail(savedBook.id.get))
+      })
+  }
+
+  def delete(identifier: Long) = AuthAction { implicit request =>
       val result = Book.deleteBook(identifier)
 
       if (result == 1)
@@ -65,8 +71,8 @@ object BookController extends Controller with ControllerSupport{
         NotFound
   }
 
-
   private val addForm: Form[Book] = Form(mapping(
+    "id" -> optional(longNumber),
     "title" -> nonEmptyText,
     "authors" -> nonEmptyText,
     "isbn10" -> optional(text),
@@ -78,25 +84,22 @@ object BookController extends Controller with ControllerSupport{
     "notes" -> optional(text),
     "pageCount" -> optional(number(min = 1)),
     "coverPictureUrl" -> optional(text),
-    "tags" -> optional(text)
-
-  ) {
-    case (title, authors, isbn10, isbn13, language, publisher, datePublished, description, notes, pageCount, coverPictureUrl, tags) =>
-      Book(NotAssigned, isbn10, isbn13, title, authors.split(delimiter).toList.map(_.trim).filter(!_.isEmpty).map(Author(NotAssigned, _)), description, publisher,
-        datePublished, if (language.equals("")) None else Some(language), pageCount, notes, coverPictureUrl, tags.map {
-          _.split(delimiter).toList.map(_.trim).filter(!_.isEmpty).map(Tag(NotAssigned, _))
-        }.getOrElse(Nil))
-  }(book => Some(book.title, book.authors.map(_.name).mkString(delimiter), book.isbn10, book.isbn13, if (book.language.isDefined) book.language.get else "",
-    book.publisher, book.datePublished, book.description, book.notes, book.pageCount, book.coverPictureUrl, book.tags match {
-      case Nil => None
-      case list => Some(list.map(_.name).mkString(delimiter))
-    })))
+    "tags" -> optional(text)) {
+      case (id, title, authors, isbn10, isbn13, language, publisher, datePublished, description, notes, pageCount, coverPictureUrl, tags) =>
+        Book(id, isbn10, isbn13, title, authors.split(delimiter).toList.map(_.trim).filter(!_.isEmpty).map(Author(NotAssigned, _)), description, publisher,
+          datePublished, if (language.equals("")) None else Some(language), pageCount, notes, coverPictureUrl, tags.map {
+            _.split(delimiter).toList.map(_.trim).filter(!_.isEmpty).map(Tag(NotAssigned, _))
+          }.getOrElse(Nil))
+    }(book => Some(book.id, book.title, book.authors.map(_.name).mkString(delimiter), book.isbn10, book.isbn13, if (book.language.isDefined) book.language.get else "",
+      book.publisher, book.datePublished, book.description, book.notes, book.pageCount, book.coverPictureUrl, book.tags match {
+        case Nil => None
+        case list => Some(list.map(_.name).mkString(delimiter))
+      })))
 
   def addManualForm() = AuthAction {
     implicit request =>
       Ok(views.html.books.add.manual(addForm))
   }
-
 
   def fetchFromGoogleBooks(isbn: String) = AuthAction {
 
