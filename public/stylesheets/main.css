@@ -1,0 +1,135 @@
+/* Fundamental */
+h1 {
+    /*text-align: center;*/
+}
+
+.footer {
+    font-size: 7pt;
+    text-align: center;
+}
+
+.content-row {
+    min-height: 450px;
+}
+
+
+a.author-popover-link {
+    text-decoration: none; border-bottom:1px dotted;
+}
+
+div.tag-list a.tag-link {
+    cursor: pointer;
+}
+
+a.popover-link {
+    cursor: help;
+}
+
+div.author-popover-content {
+    font-size: 8pt;
+}
+
+div.tag-popover-content {
+    font-size: 8pt;
+}
+
+span.search-highlight {
+    color: red;
+}
+
+
+
+/* Add book form */
+
+.add-book-form-container img.cover-picture { /* cover picture */
+    float: left;
+    padding: 2px;
+    margin-right: 40px;
+    border: black 1px solid;
+    width: 128px;
+    height: 165px;
+}
+
+form.google-books-fetch { /* fetch by ISBN inline form */
+    width: 450px;
+    margin: 15px auto 15px auto;
+}
+
+form.add-book { /* main add book form */
+    margin: 5px auto 15px auto;
+    float: left;
+}
+
+/* Form detail */
+
+.book-detail img.cover-picture { /* cover picture */
+    padding: 2px;
+    display: block;
+    border: black 1px solid;
+    margin: 5px auto 5px auto;
+    width: 128px;
+    height: 165px;
+}
+
+.book-detail .a-label {
+    font-weight: bold;
+}
+
+.book-detail .book-menu {
+    text-align: center;
+}
+
+.book-detail .tags {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.book-detail .flag img {
+    margin: 0px auto 0px auto;
+    display: block;
+    width: 32px;
+}
+
+.book-detail .book-menu a {
+    display: block;
+}
+
+
+
+/* Book item on list of all books or search result */
+
+.browse-books .author-list .selected {
+    font-weight: bold;
+}
+
+.browse-books .tag-list {
+    margin-bottom: 45px;
+}
+
+.browse-books .book-list .book-item {
+    margin: 10px 5px 10px 5px;
+    padding: 2px;
+    padding-left: 4px;
+    border: solid #FAFAFA;
+    border-width: 0 0 0 8px;
+}
+.browse-books .book-list .book-item .cover-picture {
+    float: left;
+    width: 45px;
+    height: 60px;
+    margin-right: 8px;
+    border: 1px solid black;
+    padding: 1px;
+}
+.browse-books .book-list .book-item .title {
+    font-size: 13pt;
+    font-weight: bold;
+}
+.browse-books .book-list .book-item .title .plain-url {
+    font-size: 8pt;
+    font-weight: normal;
+    font-family: monospace;
+}
+.browse-books .book-list .book-item .authors {
+    font-size: 8pt;
+}

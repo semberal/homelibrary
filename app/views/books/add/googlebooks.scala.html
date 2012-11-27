@@ -1,0 +1,18 @@
+@()(implicit session: Session, flash: Flash, request: Request[_])
+
+@layout.main("Add new book")(List("gb-fetch.js")) {
+
+
+    <form class="form-inline google-books-fetch" data-gb-url="@routes.BookController.fetchFromGoogleBooks()">
+        <input class="text" placeholder="@Messages("isbn")" name="isbn" id="prefetch-isbn">
+        <button class="btn" data-loading-text="@Messages("gb.loading")" data-loading-found="@Messages("gb.loading.found")"
+            data-loading-not-found="@Messages("gb.loading.notFound")">@Messages("gb.loading.submit")</button>
+        <span class="fetch-result"></span>
+    </form>
+
+    <hr>
+
+    <div class="add-book-form-container">
+
+    </div>
+}
