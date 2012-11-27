@@ -1,8 +1,9 @@
 ## General
-application.title=Home Library
+application.title=Homelibrary
 log.in=Sign in
 log.out=Log out
 submit=Submit
+detail=Detail
 edit=Edit
 delete=Delete
 password=Password
@@ -37,9 +38,9 @@ index.cleanup.message={0} object(s) have been deleted
 # Menu
 menu.dashboard=Dashboard
 menu.browse=Browse
-menu.books=Book management
-menu.books.manualAdd=Add a new book manually
-menu.books.gbAdd=Prefetch a book from Google books
+menu.books=Add a new book
+menu.books.manualAdd=Add manually
+menu.books.gbAdd=Fetch from Google books
 menu.books.tags=Tag management
 menu.books.authors=Author management
 menu.search.placeholder=Search library

@@ -1,4 +1,4 @@
-@(books: List[Book])(implicit request: Request[_])
+@(books: List[Book])(implicit request: Request[_], session: Session)
 
 
 @if(books.isEmpty) {

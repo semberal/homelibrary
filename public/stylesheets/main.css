@@ -133,12 +133,10 @@ form.add-book { /* main add book form */
 .browse-books .book-list .book-item .title {
     font-size: 13pt;
     font-weight: bold;
+    float: left;
+    margin-right: 10px;
 }
-.browse-books .book-list .book-item .title .plain-url {
-    font-size: 8pt;
-    font-weight: normal;
-    font-family: monospace;
-}
+
 .browse-books .book-list .book-item .authors {
     font-size: 8pt;
 }
