@@ -13,13 +13,14 @@
     @inputText(bookForm("isbn13"))
     @select(bookForm("language"), options=Seq("" -> "---Language---",
                                               "cs" -> Messages("lang.cs"),
-                                              "de"-> Messages("lang.de"),
                                               "dk" -> Messages("lang.dk"),
                                               "en"-> Messages("lang.en"),
                                               "fr"-> Messages("lang.fr"),
+                                              "de"-> Messages("lang.de"),
                                               "it"-> Messages("lang.it"),
                                               "no"-> Messages("lang.no"),
                                               "pl"-> Messages("lang.pl"),
+                                              "es" -> Messages("lang.es"),
                                               "se"-> Messages("lang.se")))
     @inputText(bookForm("publisher"))
     @inputText(bookForm("pageCount"), 'class -> "input-small")
