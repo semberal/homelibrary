@@ -10,6 +10,10 @@ object FlagController extends Controller {
 
   private val flagDirectory = "/public/images/flags/"
 
+  private val defaultFlag = flagDirectory + "default.png"
+
+  private def mkStream(filePath: String) = getClass.getResourceAsStream(filePath)
+
   def getFlag(code: String) = Action {
 
     val flagStream = mkStream(flagDirectory + code + ".png")
@@ -21,9 +25,7 @@ object FlagController extends Controller {
   }
 
 
-  def defaultFlag = flagDirectory + "default.png"
 
-  def mkStream(filePath: String) = getClass.getResourceAsStream(filePath)
 
 
 }
