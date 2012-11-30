@@ -2,13 +2,16 @@ package controllers
 
 import play.api.mvc._
 import models.Book
+import play.api.Play
+import play.api.Play.current
 
 object IndexController extends Controller {
 
   def index = Action { implicit request =>
     val books = Book.getBooks()
 
-    Ok(views.html.index(books.take(4)))
+    val bookCount = Play.configuration.getInt("application.homepageBookCount").get
+    Ok(views.html.index(books.take(bookCount)))
   }
 
 }
