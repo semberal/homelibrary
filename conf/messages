@@ -28,6 +28,10 @@ page.notFound.title=Page not found (404)
 page.notFound.message=The page you''ve requested has not been found, you are going to be redirected to the home page...
 
 
+detail.date.createdAt=Created at
+detail.date.modifiedAt=Last modified at
+
+
 ## Popovers
 popover.author.text=In your library, there are in total {0} book(s) by this author
 popover.tag.text=In your library, there are in total {0} book(s) with this tag

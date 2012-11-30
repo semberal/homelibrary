@@ -13,7 +13,9 @@ create table book (
 	lang varchar(6),
 	page_count int,
 	notes text,
-	cover_picture_url varchar(240)
+	cover_picture_url varchar(240),
+	date_created datetime not null default now(),
+	date_modified datetime not null default now()
 );
 
 create table author (

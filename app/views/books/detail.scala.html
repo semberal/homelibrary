@@ -26,6 +26,14 @@
                         data-redirect-url="@routes.BookController.list()" data-confirmation-message="@Messages("book.confirmation.delete")">@Messages("delete")</a>
             </div>
         }
+
+        <div class="dates">
+            <span>@Messages("detail.date.createdAt"):</span><br/>
+            <span>@book.dateCreated.format("dd/MM/yyyy HH:mm")</span><br/><br/>
+            <span>@Messages("detail.date.modifiedAt"):</span><br/>
+            <span>@book.dateModified.format("dd/MM/yyyy HH:mm")</span>
+        </div>
+
     </div>
     <div class="span10">
 

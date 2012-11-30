@@ -9,6 +9,7 @@ import play.api.data.Forms._
 import anorm.NotAssigned
 import Defaults.optionToPk
 import Defaults.pkToOption
+import java.util.Date
 
 object BookController extends Controller with ControllerSupport {
 
@@ -16,7 +17,7 @@ object BookController extends Controller with ControllerSupport {
 
   def list(query: String) = Action {
     implicit request =>
-      val books = Book.getBooks().filter(_.title.toLowerCase.contains(query.toLowerCase)).sortWith(_.title < _.title)
+      val books = Book.getBooks().filter(_.title.toLowerCase.contains(query.toLowerCase))
       Ok(views.html.books.list(books, Author.getAll, Tag.getAll))
   }
 
@@ -89,7 +90,7 @@ object BookController extends Controller with ControllerSupport {
         Book(id, isbn10, isbn13, title, authors.split(delimiter).toList.map(_.trim).filter(!_.isEmpty).map(Author(NotAssigned, _)), description, publisher,
           datePublished, if (language.equals("")) None else Some(language), pageCount, notes, coverPictureUrl, tags.map {
             _.split(delimiter).toList.map(_.trim).filter(!_.isEmpty).map(Tag(NotAssigned, _))
-          }.getOrElse(Nil))
+          }.getOrElse(Nil), new Date(), new Date())
     }(book => Some(book.id, book.title, book.authors.map(_.name).mkString(delimiter), book.isbn10, book.isbn13, if (book.language.isDefined) book.language.get else "",
       book.publisher, book.datePublished, book.description, book.notes, book.pageCount, book.coverPictureUrl, book.tags match {
         case Nil => None

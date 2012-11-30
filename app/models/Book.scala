@@ -19,7 +19,9 @@ case class Book(id: Pk[Long],
                 pageCount: Option[Int],
                 notes: Option[String],
                 coverPictureUrl: Option[String],
-                tags: List[Tag])
+                tags: List[Tag],
+                dateCreated: Date,
+                dateModified: Date)
 
 object Book {
 
@@ -36,14 +38,16 @@ object Book {
       get[Option[Int]]("page_count") ~
       get[Option[String]]("notes") ~
       get[Option[String]]("cover_picture_url") ~
-      Tag.tagParser map {
+      Tag.tagParser ~
+      get[Date]("date_created") ~
+      get[Date]("date_modified") map {
       // non-existing TupleFlattener for so many elements, cannot use .map(flatten)
-      case id ~ isbn10 ~ isbn13 ~ title ~ author ~ description ~ publisher ~ datePublished ~ lang ~ pageCount ~ notes ~ coverPictureUrl ~ tags =>
-        (id, isbn10, isbn13, title, author, description, publisher, datePublished, lang, pageCount, notes, coverPictureUrl, tags)
+      case id ~ isbn10 ~ isbn13 ~ title ~ author ~ description ~ publisher ~ datePublished ~ lang ~ pageCount ~ notes ~ coverPictureUrl ~ tags ~ dateCreated ~ dateModified =>
+        (id, isbn10, isbn13, title, author, description, publisher, datePublished, lang, pageCount, notes, coverPictureUrl, tags, dateCreated, dateModified)
     }
 
   private val bookQuery =
-    """select book.book_id as book_id, isbn10, isbn13, title, description, publisher, date_published, lang, page_count, notes, cover_picture_url, author.author_id, author.name, tag.tag_id, tag.name from book
+    """select book.book_id as book_id, isbn10, isbn13, title, description, publisher, date_published, lang, page_count, notes, cover_picture_url, author.author_id, author.name, tag.tag_id, tag.name, date_created, date_modified from book
              left join book_author on book.book_id = book_author.book_id inner join author on book_author.author_id = author.author_id
              left join book_tag on book.book_id = book_tag.book_id left join tag on book_tag.tag_id = tag.tag_id """
 
@@ -56,10 +60,10 @@ object Book {
         val bookId: Option[Long] = book.id match {
           case Id(value) =>
             /* update values */
-            val updateSql = """update book set isbn10={isbn10}, isbn13={isbn13}, title={title}, description={description}, publisher={publisher}, date_published={datePublished}, lang={lang}, page_count = {pageCount}, notes={notes} where book_id = {bookId}"""
+            val updateSql = """update book set isbn10={isbn10}, isbn13={isbn13}, title={title}, description={description}, publisher={publisher}, date_published={datePublished}, lang={lang}, page_count = {pageCount}, notes={notes}, date_modified={dateModified} where book_id = {bookId}"""
             SQL(updateSql).on("isbn10" -> book.isbn10, "isbn13" -> book.isbn13, "title" -> book.title,
               "description" -> book.description, "publisher" -> book.publisher, "datePublished" -> book.datePublished,
-              "lang" -> book.language, "pageCount" -> book.pageCount, "notes" -> book.notes, "bookId" -> value).executeUpdate()
+              "lang" -> book.language, "pageCount" -> book.pageCount, "notes" -> book.notes, "dateModified" -> new Date(), "bookId" -> value).executeUpdate()
 
             /* delete join tables for the book (new entries will be stored later) */
             SQL("""delete from book_tag where book_id = {bookId}""").on("bookId" -> value).executeUpdate()
@@ -68,7 +72,7 @@ object Book {
             Some(value)
 
           case NotAssigned =>
-            val sql = """insert into book values (DEFAULT, {isbn10}, {isbn13}, {title}, {description}, {publisher}, {datePublished}, {lang}, {pageCount}, {notes}, {coverPictureUrl})"""
+            val sql = """insert into book values (DEFAULT, {isbn10}, {isbn13}, {title}, {description}, {publisher}, {datePublished}, {lang}, {pageCount}, {notes}, {coverPictureUrl}, DEFAULT, DEFAULT)"""
 
             SQL(sql).on("isbn10" -> book.isbn10, "isbn13" -> book.isbn13, "title" -> book.title,
               "description" -> book.description, "publisher" -> book.publisher, "datePublished" -> book.datePublished,
@@ -116,10 +120,11 @@ object Book {
           case Some(id) => list.filter(_.authors.exists(_.id.get == id))
           case None => list
         }
-        tagId match {
+
+        (tagId match {
           case Some(id) => authorFilteredList.filter(_.tags.exists(_.id.get == id))
           case None => authorFilteredList
-        }
+        }).sortWith((b1, b2) => b1.dateCreated.after(b2.dateCreated))
     }
   }
 
