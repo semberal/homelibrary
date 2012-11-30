@@ -8,7 +8,7 @@
 
         @book.language.map{flag =>
             <div class="flag">
-                <img src="@routes.FlagController.getFlag(flag)"/>
+                <img class="display-tooltip" title="@Messages("lang."+flag)" src="@routes.FlagController.getFlag(flag)"/>
             </div>
         }
 
