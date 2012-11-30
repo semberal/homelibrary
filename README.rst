@@ -24,6 +24,7 @@ The application also serves as a showcase of interesting Scala and Play features
 * Working with JSON using the Play API
 * Internationalization in Play
 * Database migration using Play evolutions
+* Utilizing the flash scope to display messages to the user
 * Performing DB access with Anorm - a simple yet powerful database layer
 * Power of the Scala collections API when dealing with nontrivial Anorm result sets
 * Elegant programming style with no mutable state
