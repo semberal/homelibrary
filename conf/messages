@@ -1,5 +1,10 @@
 ## General
 application.title=Homelibrary
+application.home=https://bitbucket.org/semberal/homelibrary
+application.author.name=Lukáš Šembera
+application.author.email=semberal@gmail.com
+
+
 log.in=Sign in
 log.out=Log out
 submit=Submit
@@ -31,7 +36,10 @@ popover.tag.text=In your library, there are in total {0} book(s) with this tag
 index.header=Welcome to your Homelibrary!
 index.paragraph1=Homelibrary is a simple web application for management of your personal library. You can add books either by filling its details manually, or simply enter the book''s ISBN number (you can find it usually at the very beginning of the book) and all available information will be filled in automatically (<a href="http://books.google.com/">Google Books</a> is used for this lookup).
 index.paragraph2=In order to add a book, you need to log in. User management in Homelibrary is very simple, there is no username is required, just a password. Unless you have changed the password in <span class="code">conf/db.conf</span>, its value is <span class="code">test</span>. 
-
+index.paragraph3=You can visit the <a href="{0}">Homelibrary project page</a> for the project details, list of features, technical description and all up-to-date information.
+index.maintenance.title=Library maintenance
+index.books.title=Latest books
+index.book.empty=Your library does not contain any book, yet
  
 index.cleanup.title=Perform cleanup of authors and tags
 index.cleanup.question=When you are adding and deleting books, the database can become polluted with authors and tags which are not used anymore. Do you want to delete these unused authors and tags?
