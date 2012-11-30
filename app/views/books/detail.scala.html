@@ -3,8 +3,8 @@
 
 <div class="book-detail row-fluid">
     <div class="span2">
-        <img src="@book.coverPictureUrl.getOrElse("")" class="cover-picture">
 
+        @tags.bookImage(book.coverPictureUrl.getOrElse(""), "cover-picture")
 
         @book.language.map{flag =>
             <div class="flag">
