@@ -4,8 +4,10 @@ import play.api.mvc.{ Results, Request }
 import play.api.mvc.Action
 import play.api.mvc.Result
 import play.api.mvc.AnyContent
+import Results._
 
-trait ControllerSupport extends Results {
+trait ControllerSupport {
+
 
   def refererRedirect()(implicit request: Request[_]) = {
     Redirect(request.headers.get("Referer").getOrElse("/"))

@@ -1,5 +1,6 @@
-import play.api.mvc.RequestHeader
+import play.api.mvc.{Results, RequestHeader}
 import play.api.{Application, GlobalSettings}
+import Results._
 
 
 object Global extends GlobalSettings{
@@ -17,6 +18,11 @@ object Global extends GlobalSettings{
     play.Logger.info("Incoming request: %s" format request)
     super.onRouteRequest(request)
   }
-  
-  
+
+  override def onHandlerNotFound(requestHeader: RequestHeader) = {
+    implicit val request = requestHeader
+    implicit val session = requestHeader.session
+    implicit val flash = requestHeader.flash
+    NotFound(views.html.notFound())
+  }
 }
