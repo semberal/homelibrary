@@ -3,8 +3,10 @@ body {
     background-color: #F3F2F5;
 }
 
-h4 {
-    margin-top: 35px;
+hr {
+    border:none;
+    border-top:1px #CCCCCC solid;
+    height: 1px;
 }
 
 .footer {
@@ -51,6 +53,27 @@ span.search-highlight {
 	font-size: 9pt;
 }
 
+/* index page */
+.index h4 {
+    margin-top: 35px;
+}
+
+.index .books .book {
+    float: left;
+    margin-right: 25px;
+    width: 128px;
+}
+
+.index .books .book img {
+    width: 98%;
+    height: 168px;
+    border: 1px solid black;
+    padding: 1px;
+}
+
+.index .books .book .title {
+    text-align: center;
+}
 
 /* Add book form */
 
@@ -105,6 +128,11 @@ form.add-book { /* main add book form */
 
 .book-detail .book-menu a {
     display: block;
+}
+
+.book-detail .dates {
+    margin-top: 16px;
+    text-align: center;
 }
 
 

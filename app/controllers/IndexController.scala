@@ -8,7 +8,7 @@ object IndexController extends Controller {
   def index = Action { implicit request =>
     val books = Book.getBooks()
 
-    Ok(views.html.index(books.takeRight(4)))
+    Ok(views.html.index(books.take(4)))
   }
 
 }
