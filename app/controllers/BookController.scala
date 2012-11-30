@@ -31,7 +31,7 @@ object BookController extends Controller with ControllerSupport {
 
   def detail(identifier: Long) = Action {
     implicit request =>
-      Book.getBook(identifier).map(b => Ok(views.html.books.detail(b))).getOrElse(NotFound)
+      Book.getBook(identifier).map(b => Ok(views.html.books.detail(b))).getOrElse(CustomNotFound)
   }
 
   def addGoogleBooksForm() = AuthAction {
@@ -43,7 +43,7 @@ object BookController extends Controller with ControllerSupport {
     val book = Book.getBook(identifier)
     book match {
       case Some(book0) => Ok(views.html.books.add.manual(addForm.fill(book0)))
-      case None => NotFound
+      case None => CustomNotFound
     }
     
     
