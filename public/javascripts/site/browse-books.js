@@ -5,7 +5,7 @@ $(document).ready(function() {
     });
 
     $(".book-item").mouseleave(function() {
-        $(this).css("border-color", "#FAFAFA");
+        $(this).css("border-color", "#E6E6E6");
     });
 
     /* HIGHLIGHT THE SEARCHED PHRASE ON FIRST LOAD (NON-AJAX) */

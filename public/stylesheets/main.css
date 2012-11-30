@@ -158,7 +158,7 @@ form.add-book { /* main add book form */
     margin: 10px 5px 10px 5px;
     padding: 2px;
     padding-left: 4px;
-    border: solid #FAFAFA;
+    border: solid #E6E6E6;
     border-width: 0 0 0 8px;
 }
 .browse-books .book-list .book-item .cover-picture {
