@@ -1,9 +1,10 @@
+import controllers.ControllerSupport
 import play.api.mvc.{Results, RequestHeader}
 import play.api.{Application, GlobalSettings}
 import Results._
 
 
-object Global extends GlobalSettings{
+object Global extends GlobalSettings with ControllerSupport{
   override def onStart(app: Application) {
     super.onStart(app)
     play.Logger.info("Starting the application.")
@@ -19,10 +20,8 @@ object Global extends GlobalSettings{
     super.onRouteRequest(request)
   }
 
-  override def onHandlerNotFound(requestHeader: RequestHeader) = {
-    implicit val request = requestHeader
-    implicit val session = requestHeader.session
-    implicit val flash = requestHeader.flash
-    NotFound(views.html.notFound())
+  override def onHandlerNotFound(request: RequestHeader) = {
+    implicit val request0 = request
+    CustomNotFound
   }
 }

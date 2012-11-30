@@ -1,4 +1,4 @@
-@(title: String = Messages("application.title"))(additionalScripts: List[String] = List())(content: Html)(implicit session: Session, flash: Flash, request: RequestHeader)
+@(title: String = Messages("application.title"))(additionalScripts: List[String] = List())(content: Html)(implicit request: RequestHeader)
 
 <!DOCTYPE html>
 
@@ -21,11 +21,11 @@
     </head>
     <body>
 
-        @if(flash.get("level").isDefined) {
-            @defining(if (flash.get("level").get == "warning") "" else "alert-" + flash.get("level").get) {level =>
+        @if(request.flash.get("level").isDefined) {
+            @defining(if (request.flash.get("level").get == "warning") "" else "alert-" + request.flash.get("level").get) {level =>
                 <div class="alert @level">
                     <button type="button" class="close" data-dismiss="alert">×</button>
-                    @flash.get("msg").get
+                    @request.flash.get("msg").get
                 </div>
             }
         }
@@ -40,7 +40,7 @@
                             <ul class="nav">
                                 <li><a href="@routes.IndexController.index">@Messages("menu.dashboard")</a></li>
                                 <li><a href="@routes.BookController.list()">@Messages("menu.browse")</a></li>
-                                @if(session.get("authenticated").isDefined) {
+                                @if(request.session.get("authenticated").isDefined) {
                                     <li class="dropdown">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                             @Messages("menu.books")
@@ -59,7 +59,7 @@
                                 </form>
                             </ul>
 
-                            @if(session.get("authenticated").isDefined) {
+                            @if(request.session.get("authenticated").isDefined) {
                                 <ul class="nav pull-right">
                                     <li class="pull-right"><a href="@routes.LogoutController.logout">@Messages("log.out")</a></li>
                                 </ul>

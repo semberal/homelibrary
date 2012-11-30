@@ -1,9 +1,6 @@
 package controllers
 
-import play.api.mvc.{ Results, Request }
-import play.api.mvc.Action
-import play.api.mvc.Result
-import play.api.mvc.AnyContent
+import play.api.mvc._
 import Results._
 
 
@@ -12,6 +9,9 @@ import Results._
  */
 trait ControllerSupport {
 
+  def CustomNotFound(implicit requestHeader: RequestHeader) = {
+    NotFound(views.html.notFound())
+  }
 
   def refererRedirect()(implicit request: Request[_]) = {
     Redirect(request.headers.get("Referer").getOrElse("/"))
