@@ -58,6 +58,10 @@ span.search-highlight {
     margin-top: 35px;
 }
 
+.index .books {
+    margin-top: 25px;
+}
+
 .index .books .book {
     float: left;
     margin-right: 25px;
