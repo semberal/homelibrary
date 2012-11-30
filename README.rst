@@ -16,7 +16,7 @@ Features
 * Automatically obtaining information about a book by specifying its identifier (either ``ISBN10`` or ``ISBN13``) and downloading from `Google Books`_
 * Anonymous mode for browsing the books, administration mode for editing
 * Easy categorization of books, attaching tags
-* Search according to the book title, its authors and attached tags
+* Instant search (results get updated as you type) according to the book title, its authors and attached tags
 
 The application also serves as a showcase of interesting Scala and Play features, most notably:
 
