@@ -1,4 +1,7 @@
 /* Fundamental */
+body {
+    background-color: #F3F2F5;
+}
 h1 {
     /*text-align: center;*/
 }
