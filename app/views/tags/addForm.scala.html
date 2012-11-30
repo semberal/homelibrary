@@ -4,7 +4,7 @@
 @import helper._
 @implicitField = @{ FieldConstructor(tb2.f) }
 
-<img src="@bookForm("coverPictureUrl").value" class="cover-picture">
+@tags.bookImage(bookForm("coverPictureUrl").value.getOrElse(""), "cover-picture")
 
 @helper.form(action = routes.BookController.save, 'class -> "form-horizontal add-book") {
     @inputText(bookForm("title"), '_required -> "true")

@@ -3,7 +3,7 @@
 <div class="book-item clearfix">
     <div>
         <a href="@routes.BookController.detail(book.id.get)">
-            <img class="cover-picture" src="@book.coverPictureUrl.getOrElse("")">
+            @tags.bookImage(book.coverPictureUrl.getOrElse(""), "cover-picture")
         </a>
     </div>
     <div>

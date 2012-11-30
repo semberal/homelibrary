@@ -19,7 +19,7 @@
                 @for(book <- books) {
                     <div class="book">
                         <a href="@routes.BookController.detail(book.id.get)">
-                            <img src="@book.coverPictureUrl.getOrElse("")">
+                            @tags.bookImage(book.coverPictureUrl.getOrElse(""))
                         </a>
                         <div class="title">
                             <a href="@routes.BookController.detail(book.id.get)">@book.title</a>
