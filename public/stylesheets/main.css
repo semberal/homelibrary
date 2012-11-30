@@ -61,11 +61,14 @@ span.search-highlight {
 .index .books .book {
     float: left;
     margin-right: 25px;
+    margin-bottom: 35px;
     width: 128px;
+    max-height: 220px;
+    height: 220px;
 }
 
 .index .books .book img {
-    width: 98%;
+    width: 96%;
     height: 168px;
     border: 1px solid black;
     padding: 1px;

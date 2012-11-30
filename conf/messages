@@ -42,7 +42,7 @@ index.paragraph1=Homelibrary is a simple web application for management of your 
 index.paragraph2=In order to add a book, you need to log in. User management in Homelibrary is very simple, there is no username is required, just a password. Unless you have changed the password in <span class="code">conf/db.conf</span>, its value is <span class="code">test</span>. 
 index.paragraph3=You can visit the <a href="{0}">Homelibrary project page</a> for the project details, list of features, technical description and all up-to-date information.
 index.maintenance.title=Library maintenance
-index.books.title=Latest books
+index.books.title=Newest books in the library
 index.book.empty=Your library does not contain any book, yet
  
 index.cleanup.title=Perform cleanup of authors and tags
