@@ -1,11 +1,14 @@
 package controllers
 
 import play.api.mvc._
+import models.Book
 
 object IndexController extends Controller {
 
   def index = Action { implicit request =>
-    Ok(views.html.index())
+    val books = Book.getBooks()
+
+    Ok(views.html.index(books.takeRight(4)))
   }
 
 }

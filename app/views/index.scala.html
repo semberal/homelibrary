@@ -1,4 +1,4 @@
-@()(implicit session: Session, flash: Flash, request: Request[_])
+@(books: List[Book])(implicit session: Session, flash: Flash, request: Request[_])
 
 @layout.main("Homelibrary main page")(List("dashboard.js")) {
 	
@@ -6,8 +6,19 @@
   
     <p>@Html(Messages("index.paragraph1"))</p>
 	<p>@Html(Messages("index.paragraph2"))</p>
+	<p>@Html(Messages("index.paragraph3", Messages("application.home")))</p>
   
-  
+
+    <h4>@Messages("index.books.title")</h4>
+    @if(books.isEmpty) {
+        <p>@Messages("index.book.empty")
+    } else {
+
+    }
+
+
+
+    <h4>@Messages("index.maintenance.title")</h4>
 	@session.get("authenticated").map {_ =>
   		<a href="#" class="db-cleanup" 
 					data-cleanup-url="@routes.UtilController.cleanup"
