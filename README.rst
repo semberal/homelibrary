@@ -7,7 +7,7 @@ About
 
 Homelibrary is a simple application for categorizing books. I originally developed the application for my wife to help her with categorizing books. 
 
-Homelibrary is written in the Scala programming language (version 2.9.2) and Play web framework (version 2.0.4). The client side is written in HTML5 and JavaScript. The application took the shared third place in the [Typesafe developer contest](http://blog.typesafe.com/developer-contest-winners-announced).
+Homelibrary is written in the Scala programming language (version 2.9.2) and Play web framework (version 2.0.4). The client side is written in HTML5 and JavaScript. The application took the shared third place in the `Typesafe developer contest`_.
 
 
 Features
@@ -82,7 +82,7 @@ Reference
 ---------
 I have learnt many of the concepts used in Homelibrary from an excellent book `Play for Scala`_ by Peter Hilton, Erik Bakker and Francisco Canedo. The `Play framework documentation`_ is also very well structured and information rich.
 
-
+.. _Typesafe developer contest: http://blog.typesafe.com/developer-contest-winners-announced
 .. _Google Books: http://books.google.com/
 .. _Twitter Bootstrap: http://twitter.github.com/bootstrap/
 .. _Play for Scala: http://www.manning.com/hilton/
