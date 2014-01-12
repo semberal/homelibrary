@@ -31,7 +31,7 @@ object Tag {
   def getAll: List[Tag] = {
     val sql = """select tag_id, tag.name from tag order by tag.name"""
     DB.withConnection(implicit c =>
-      SQL(sql).as(tagParser *).flatten
+      SQL(sql).as(tagParser.*).flatten
     )
   }
 
