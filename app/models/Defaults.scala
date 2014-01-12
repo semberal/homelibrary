@@ -3,6 +3,9 @@ package models
 import anorm.{NotAssigned, Id, Pk}
 
 object Defaults {
+
+  import scala.language.implicitConversions
+
   /*
    * Implicit conversion from Option[T] to Pk[T] (because of the annoying executeInsert() returning Option[Long]
    */

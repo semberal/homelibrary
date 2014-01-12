@@ -105,14 +105,14 @@ object Book {
     DB.withConnection {
       implicit c =>
         val sql = bookQueryWithId
-        val result = SQL(sql).on("book_id" -> bookId).as(bookRowParser *)
+        val result = SQL(sql).on("book_id" -> bookId).as(bookRowParser.*)
         result.map(_.copy(_5 = result.map(_._5).distinct, _13 = result.map(_._13).flatten.distinct)).headOption.map(tuple => (Book.apply _).tupled(tuple))
     }
 
   def getBooks(authorId: Option[Long] = None, tagId: Option[Long] = None): List[Book] = {
     DB.withConnection {
       implicit c =>
-        val list = SQL(bookQuery).as(bookRowParser *).groupBy(_._1).values.map {
+        val list = SQL(bookQuery).as(bookRowParser.*).groupBy(_._1).values.map {
           tupleList => tupleList.map(_.copy(_5 = tupleList.map(_._5).distinct, _13 = tupleList.map(_._13).flatten.distinct)).headOption
         }.flatten.map(tuple => (Book.apply _).tupled(tuple)).toList
 

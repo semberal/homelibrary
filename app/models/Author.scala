@@ -25,7 +25,7 @@ object Author {
   def getAll: List[Author] = {
     val sql = """select author_id, name from author order by name"""
     DB.withConnection(implicit c =>
-      SQL(sql).as(authorParser *)
+      SQL(sql).as(authorParser.*)
     )
   }
 
