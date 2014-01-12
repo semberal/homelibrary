@@ -5,13 +5,13 @@ import play.api._
 import models.{Tag, Author}
 
 object UtilController extends Controller with ControllerSupport {
-  def listConfiguration = AuthAction {
+  def listConfiguration = Authenticated {
     implicit request =>
       val keys = Play.current.configuration.keys.toList.sortWith(_ < _)
       Ok(keys.mkString("\n"))
   }
 
-  def cleanup = AuthAction {
+  def cleanup = Authenticated {
     implicit request =>
       val x = Author.cleanup()
       val y = Tag.cleanup()

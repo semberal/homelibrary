@@ -1,8 +1,8 @@
 import controllers.ControllerSupport
-import play.api.mvc.{Results, RequestHeader}
+import play.api.libs.concurrent.Akka
+import play.api.mvc.RequestHeader
 import play.api.{Application, GlobalSettings}
-import Results._
-
+import scala.concurrent.Future
 
 object Global extends GlobalSettings with ControllerSupport{
   override def onStart(app: Application) {
@@ -21,7 +21,9 @@ object Global extends GlobalSettings with ControllerSupport{
   }
 
   override def onHandlerNotFound(request: RequestHeader) = {
+    import play.api.Play.current
+    implicit val dispatcher = Akka.system.dispatcher
     implicit val request0 = request
-    CustomNotFound
+    Future(CustomNotFound)
   }
 }

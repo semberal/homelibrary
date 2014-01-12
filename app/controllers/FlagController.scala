@@ -1,7 +1,8 @@
 package controllers
 
-import play.api.mvc.{Action, SimpleResult, ChunkedResult, Controller}
+import play.api.mvc.{Action, Controller}
 import play.api.libs.iteratee.Enumerator
+import play.api.libs.concurrent.Akka
 
 /**
  * @author Lukas Sembera <semberal@gmail.com>
@@ -17,15 +18,12 @@ object FlagController extends Controller {
   def getFlag(code: String) = Action {
 
     val flagStream = mkStream(flagDirectory + code + ".png")
+    import play.api.Play.current
+    implicit val dispatcher = Akka.system.dispatcher
 
     if (flagStream != null)
-      Ok.stream(Enumerator.fromStream(flagStream)).as("image/png")
+      Ok.chunked(Enumerator.fromStream(flagStream)).as("image/png")
     else
-      Ok.stream(Enumerator.fromStream(mkStream(defaultFlag))).as("image/png")
+      Ok.chunked(Enumerator.fromStream(mkStream(defaultFlag))).as("image/png")
   }
-
-
-
-
-
 }
