@@ -7,7 +7,7 @@ About
 
 Homelibrary is a simple application for categorizing books. I originally developed the application for my wife to help her with categorizing books. 
 
-Homelibrary is written in the Scala programming language (version 2.9.2) and Play web framework (version 2.0.4). The client side is written in HTML5 and JavaScript. The application took the shared third place in the `Typesafe developer contest`_.
+Homelibrary is written in the Scala programming language (version 2.10.2) and Play web framework (version 2.2.1). The client side is written in HTML5 and JavaScript. The application took the shared third place in the `Typesafe developer contest`_.
 
 
 Features
