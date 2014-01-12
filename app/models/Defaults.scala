@@ -3,9 +3,6 @@ package models
 import anorm.{NotAssigned, Id, Pk}
 
 object Defaults {
-  val GoogleBooksDateFormat = "yyyy-MM-dd"
-  val GoogleBooksShortDateFormat = "yyyy"
-
   /*
    * Implicit conversion from Option[T] to Pk[T] (because of the annoying executeInsert() returning Option[Long]
    */

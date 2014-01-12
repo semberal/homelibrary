@@ -1,36 +1,26 @@
 package models.formats
 
+import models.{Author, Book}
 import play.api.libs.json._
-import models.{Author, Defaults, Book}
-import play.api.libs.json.JsString
-import java.text.SimpleDateFormat
-import anorm.NotAssigned
+import play.api.libs.functional.syntax._
 import java.util.Date
+import anorm.NotAssigned
 
 object Formats {
-  implicit object BookFormat extends Reads[Book] {
-
-    def reads(volumeInfo: JsValue): Book = {
-      val title = (volumeInfo \ "title").asOpt[String]
-      val authors = (volumeInfo \ "authors").asOpt[List[String]]
-      val description = (volumeInfo \ "description").asOpt[String]
-
-      val publisher = (volumeInfo \ "publisher").asOpt[String]
-      val datePublished = (volumeInfo \ "publishedDate") match {
-        case JsString(str) if str.length == Defaults.GoogleBooksDateFormat.length => Some(new SimpleDateFormat(Defaults.GoogleBooksDateFormat).parse(str))
-        case JsString(str) if str.length == Defaults.GoogleBooksShortDateFormat.length => Some(new SimpleDateFormat(Defaults.GoogleBooksShortDateFormat).parse(str))
-        case _ => None
-      }
-      val language = (volumeInfo \ "language").asOpt[String]
-      val imgUrl = (volumeInfo \ "imageLinks" \ "thumbnail").asOpt[String]
-      val pageCount = (volumeInfo \ "pageCount").asOpt[Int]
-
-      val isbn10 = (volumeInfo \ "industryIdentifiers")(0).\("identifier").asOpt[String]
-      val isbn13 = (volumeInfo \ "industryIdentifiers")(1).\("identifier").asOpt[String]
-
-      Book(NotAssigned, isbn10, isbn13, title.getOrElse(""), authors.map{_.map{name => Author(NotAssigned, name)}}.getOrElse(List()),
-        description, publisher, datePublished, language, pageCount, None, imgUrl, List(), new Date(), new Date())
-
-    }
+  implicit val bookReads: Reads[Book] = (
+    (__ \ "title").readNullable[String] ~
+      (__ \ "authors").readNullable[List[String]] ~
+      (__ \ "description").readNullable[String] ~
+      (__ \ "publisher").readNullable[String] ~
+      (__ \ "publishedDate").lazyReadNullable[Date](Reads.dateReads("yyyy-MM-dd") or Reads.dateReads("yyyy")) ~
+      (__ \ "language").readNullable[String] ~
+      (__ \ "imageLinks" \ "thumbnail").readNullable[String] ~
+      (__ \ "pageCount").readNullable[Int] ~
+      ((__ \ "industryIdentifiers")(0) \ "identifier").readNullable[String] ~
+      ((__ \ "industryIdentifiers")(1) \ "identifier").readNullable[String]
+    ).tupled.map {
+    case (title, authors, description, publisher, publishedDate, language, thumbnail, pageCount, isbn10, isbn13) =>
+      Book(NotAssigned, isbn10, isbn13, title.getOrElse(""), authors.map(_.map(name => Author(NotAssigned, name))).getOrElse(List()),
+        description, publisher, publishedDate, language, pageCount, None, thumbnail, List(), new Date(), new Date())
   }
 }

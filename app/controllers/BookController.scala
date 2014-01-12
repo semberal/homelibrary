@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc._
 import play.api.libs.ws.WS
-import play.api.libs.json.{ JsString, JsArray, Json }
+import play.api.libs.json._
 import models.{ Tag, Author, Defaults, Book }
 import play.api.data.Form
 import play.api.data.Forms._
@@ -10,6 +10,8 @@ import anorm.NotAssigned
 import Defaults.optionToPk
 import Defaults.pkToOption
 import java.util.Date
+import scala.Some
+import play.api.libs.concurrent.Akka
 
 object BookController extends Controller with ControllerSupport {
 
@@ -46,8 +48,8 @@ object BookController extends Controller with ControllerSupport {
       case Some(book0) => Ok(views.html.books.add.manual(addForm.fill(book0)))
       case None => CustomNotFound
     }
-    
-    
+
+
 
   }
 
@@ -80,7 +82,7 @@ object BookController extends Controller with ControllerSupport {
     "isbn13" -> optional(text),
     "language" -> text,
     "publisher" -> optional(text),
-    "datePublished" -> optional(date(Defaults.GoogleBooksShortDateFormat).verifying("date.notInRange", date => true)), //todo correct validation
+    "datePublished" -> optional(date("yyyy").verifying("date.notInRange", date => true)), //todo correct validation
     "description" -> optional(text),
     "notes" -> optional(text),
     "pageCount" -> optional(number(min = 1)),
@@ -105,7 +107,9 @@ object BookController extends Controller with ControllerSupport {
   def fetchFromGoogleBooks(isbn: String) = AuthAction {
 
     implicit request =>
-      import models.formats.Formats.BookFormat
+      import models.formats.Formats.bookReads
+      import play.api.Play.current
+      implicit val dispatcher = Akka.system.dispatcher
       play.Logger.info("Fetch from google books. ISBN: %s" format isbn)
       Async {
         val url = "https://www.googleapis.com/books/v1/volumes"
@@ -117,9 +121,13 @@ object BookController extends Controller with ControllerSupport {
             if ((jsonResponse \ "totalItems").as[Int] > 0) {
               val volumeInfo = jsonResponse.\("items")(0).\("volumeInfo")
 
-              val book = Json.fromJson(volumeInfo)
-              play.Logger.info(book.toString)
-              Ok(views.html.tags.addForm(addForm.fill(book)))
+              volumeInfo.validate[Book] match {
+                case JsSuccess(book, _) =>
+                  play.Logger.info(book.toString)
+                  Ok(views.html.tags.addForm(addForm.fill(book)))
+                case JsError(err) => println(err); NotFound
+              }
+
             } else NotFound
 
         }
