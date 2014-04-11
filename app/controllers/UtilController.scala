@@ -2,7 +2,9 @@ package controllers
 
 import play.api.mvc._
 import play.api._
-import models.{Tag, Author}
+import persist.{TagTable, AuthorTable}
+import play.api.db.slick.DB
+import play.api.Play.current
 
 object UtilController extends Controller with ControllerSupport {
   def listConfiguration = Authenticated {
@@ -13,8 +15,10 @@ object UtilController extends Controller with ControllerSupport {
 
   def cleanup = Authenticated {
     implicit request =>
-      val x = Author.cleanup()
-      val y = Tag.cleanup()
+      val (x, y) = DB.withTransaction {
+        implicit session =>
+          (AuthorTable.authors.cleanup.first(), TagTable.tags.cleanup.first())
+      }
       Ok((x + y).toString)
   }
 }

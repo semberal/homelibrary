@@ -1,8 +1,7 @@
 package controllers
 
 import play.api.mvc.{Action, Controller}
-import models.{Book, Author}
-import play.api.libs.json.Json
+import models.Book
 
 /**
  * @author Lukas Sembera <semberal@gmail.com>

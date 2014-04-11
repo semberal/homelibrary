@@ -3,15 +3,16 @@ package controllers
 import play.api.mvc._
 import play.api.libs.ws.WS
 import play.api.libs.json._
-import models.{Tag, Author, Defaults, Book}
+import models.{Tag, Author, Book}
 import play.api.data.Form
 import play.api.data.Forms._
-import anorm.NotAssigned
-import Defaults.optionToPk
-import Defaults.pkToOption
 import java.util.Date
 import scala.Some
 import play.api.libs.concurrent.Akka
+import persist.AuthorTable
+import play.api.db.slick.DB
+import play.api.Play.current
+import scala.slick.driver.H2Driver.simple._
 
 object BookController extends Controller with ControllerSupport {
 
@@ -20,7 +21,11 @@ object BookController extends Controller with ControllerSupport {
   def list(query: String) = Action {
     implicit request =>
       val books = Book.getBooks().filter(_.title.toLowerCase.contains(query.toLowerCase))
-      Ok(views.html.books.list(books, Author.getAll, Tag.getAll))
+      val tags = DB.withTransaction {
+        implicit session =>
+          AuthorTable.authors.list()
+      }
+      Ok(views.html.books.list(books, Author.getAll, tags))
   }
 
   def listFragment(query: String, authorId: Option[Long], tagId: Option[Long]) = Action {
@@ -91,9 +96,9 @@ object BookController extends Controller with ControllerSupport {
     "coverPictureUrl" -> optional(text),
     "tags" -> optional(text)) {
     case (id, title, authors, isbn10, isbn13, language, publisher, datePublished, description, notes, pageCount, coverPictureUrl, tags) =>
-      Book(id, isbn10, isbn13, title, authors.split(delimiter).toList.map(_.trim).filter(!_.isEmpty).map(Author(NotAssigned, _)), description, publisher,
+      Book(id, isbn10, isbn13, title, authors.split(delimiter).toList.map(_.trim).filter(!_.isEmpty).map(Author(None, _)), description, publisher,
         datePublished, if (language.equals("")) None else Some(language), pageCount, notes, coverPictureUrl, tags.map {
-          _.split(delimiter).toList.map(_.trim).filter(!_.isEmpty).map(Tag(NotAssigned, _))
+          _.split(delimiter).toList.map(_.trim).filter(!_.isEmpty).map(Tag(None, _))
         }.getOrElse(Nil), new Date(), new Date())
   }(book => Some(book.id, book.title, book.authors.map(_.name).mkString(delimiter), book.isbn10, book.isbn13, if (book.language.isDefined) book.language.get else "",
     book.publisher, book.datePublished, book.description, book.notes, book.pageCount, book.coverPictureUrl, book.tags match {
